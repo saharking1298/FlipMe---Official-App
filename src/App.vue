@@ -1,30 +1,89 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <router-view> </router-view>
 </template>
 
+<script>
+export default {
+  name: 'App',
+  components: {
+
+  },
+  methods: {
+    loadVoteHistory() {
+      let votes = localStorage.getItem('FlipMe.voteHistory');
+      if (votes === null) {
+        votes = [];
+      }
+      else {
+        try {
+          votes = JSON.parse(votes);
+        }
+        catch {
+          votes = [];
+        }
+      }
+      return votes;
+    },
+    saveVoteHistory(votes) {
+      votes = votes || this.votes;
+      localStorage.setItem('FlipMe.voteHistory', JSON.stringify(votes));
+    },
+    getVote(voteIndex) {
+      return this.votes[voteIndex];
+    }
+  },
+  data() {
+    return {
+      votes: this.loadVoteHistory(),
+    };
+  },
+  async mounted() {
+      await this.$router.isReady();
+      console.log(this.$route.path);
+      if(this.votes.length === 0 && ['/home', '/'].includes(this.$route.path)) {
+        this.$router.push('/about');
+      }
+      this.saveVoteHistory();
+  },
+  provide() {
+    return {
+      getVote: this.getVote,
+    };
+  },
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+/* Importing Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
 
-nav {
-  padding: 30px;
+/* Styling Classes */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: -1;
 }
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.flexbox{
+    display: flex;
 }
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.fas{
+    cursor: pointer;
+}
+.fade-in{
+    animation: fadeIn ease 0.8s;
+}
+fade-in-quick{
+    animation: fadeIn ease 0.4s;
+}
+@keyframes fadeIn{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
 }
 </style>
