@@ -1,10 +1,10 @@
 <template>
-    <div class="wrapper">
+    <div id="vote-creator">
         <h1> Start a Vote </h1>
         <h2> What Do You Want To Ask? </h2>
         <div>
-            <label for="question-input">Enter Your Question:</label>
-            <input type="text" v-model="voteSettings.question" id="question-input" class="main-screen-input">
+            <label class="block" for="question-input">Enter Your Question:</label>
+            <input type="text" v-model="voteSettings.question" id="question-input" class="input">
         </div>
         <h2> Vote Settings </h2>
         <div>
@@ -27,25 +27,25 @@
             <div v-if="preset.id === 'presetCustomRange'" v-show="currentPreset === 'presetCustomRange'">
                 <div>
                     <label class="range-label" for="min-range">Minimum Number</label>
-                    <input type="number" v-model="inputs.rangeMinNumber" class="main-screen-input" id="min-range">  
+                    <input type="number" v-model="inputs.rangeMinNumber" class="input" id="min-range">  
                 </div>
                 <div class="vertical-separator"></div>
                 <div>
                     <label class="range-label" for="max-range">Maximum Number</label>
-                    <input type="number" v-model="inputs.rangeMaxNumber" class="main-screen-input" id="max-range">  
+                    <input type="number" v-model="inputs.rangeMaxNumber" class="input" id="max-range">  
                 </div>
             </div>
             <div v-if="preset.id === 'presetCustomChoice'" v-show="currentPreset === 'presetCustomChoice'">
-                <label>Add a custom choice: </label>
-                <input type="text" v-model="inputs.customChoice" @keydown.enter="addCustomChoice()" class="main-screen-input">
+                <label class="block">Add a custom choice: </label>
+                <input type="text" v-model="inputs.customChoice" @keydown.enter="addCustomChoice()" class="input">
                 <button @click="addCustomChoice()" id="add-choice-btn"><strong>Add</strong></button>
                 <p class="info" v-if="customChoices.length > 0">Click on a choice to delete it!</p>
-                <div>
+                <div class="vertical-flexbox">
                     <div v-for="(choice, index) in customChoices" :key="index" class="custom-choice-block" @click="removeCustomChoice(index)"> {{choice}} </div>
                 </div>
             </div>
         </div>
-        <button @click="startVote()" class="start-button"> Start My Vote! </button>
+        <button @click="startVote()" class="start-btn"> Start My Vote! </button>
         <p class="warning" v-if="warning.active"> {{ warning.text }} </p>
     </div>
 </template>
@@ -175,6 +175,118 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+::selection {
+    background: rgba(0, 0, 0, 0.1);
+}
+#vote-creator {
+    background: #c45d7f;
+    color: white;
+    padding: 15px;
+    padding-top: 5px;
+    border-radius: 8px;
+    transition: background-color 0.15s;
+}
+#vote-creator:hover {
+    background: #be5a7b;
+}
+#question-input {
+    width: 100%;
+    display: block;
+    margin-top: 4px;
+    margin-left: 0;
+}
+.input{
+    border-radius: 5px;
+    color: rgb(250, 225, 229);
+    background-color: rgba(0, 0, 0, 0.096);
+    margin-left: 8px;
+    border: 2px solid rgb(156, 53, 87);
+    width: 70%;
+}
+.input:focus{
+    border: 3px solid rgb(161, 37, 78);
+    outline: none;
+}
+input[type=text]{
+    font-size: 1.05em;
+}
+.range-label{
+    margin-right: 6px;
+}
+.warning{
+    color:rgb(148, 17, 17);
+    font-size: 1.07em;
+    margin-top: 8px;
+    margin-bottom: 5px;
+}
+.info{
+    margin-top: 3px;
+    margin-bottom: 5px;
+    color: rgba(250, 225, 229, 0.568);
+    font-size: 0.9em;
+}
+.start-btn{
+    background-color: rgb(194, 102, 171);
+    border: 3px solid rgb(194, 102, 171);
+    color: rgb(145, 56, 122);
+    width: fit-content;
+    display: block;
+    cursor: pointer;
+    font-size: 1.4em;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 30px;
+    transition: 0.3s;
+    margin-bottom: 10px;
+    user-select: none;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+.start-btn:hover{
+    background-color: rgb(173, 87, 152);
+    border-color: rgb(173, 87, 152);
+}
+#add-choice-btn{
+    margin-left: 5px;
+    background-color: rgb(194, 102, 171);
+    border: 2px solid rgb(145, 56, 122);
+    color: rgb(145, 56, 122);
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 30px;
+    font-size: 1.05em;
+    cursor: pointer;
+}
+.custom-choice-block{
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 30px;
+    background-color: rgb(172, 71, 147);
+    color: white;
+    flex: 1;
+    overflow-wrap: break-word;
+    text-align: center;
+    transition: background-color 0.1s;
+}
+.custom-choice-block:hover{
+    background-color: rgb(156, 58, 132);
+    text-decoration: line-through;
+    cursor: pointer;
+}
+h1 {
+    margin: 0;
+    text-align: center;
+}
+h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.vertical-separator{
+    height: 7px;
+}
 </style>

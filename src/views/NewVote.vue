@@ -1,4 +1,5 @@
 <template>
+    <div class="background"></div>
     <app-header> </app-header>
     <vote-creator> </vote-creator>
 </template>
@@ -12,6 +13,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.background {
+    background: #df6a91;
+}
 </style>
