@@ -1,5 +1,7 @@
 <template>
-  <router-view> </router-view>
+  <div id="wrapper">
+    <router-view> </router-view>
+  </div>
 </template>
 
 <script>
@@ -39,7 +41,6 @@ export default {
   },
   async mounted() {
       await this.$router.isReady();
-      console.log(this.$route.path);
       if(this.votes.length === 0 && ['/home', '/'].includes(this.$route.path)) {
         this.$router.push('/about');
       }
@@ -54,36 +55,5 @@ export default {
 </script>
 
 <style>
-/* Importing Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
-
-/* Styling Classes */
-.background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100%;
-  z-index: -1;
-}
-.flexbox{
-    display: flex;
-}
-.fas{
-    cursor: pointer;
-}
-.fade-in{
-    animation: fadeIn ease 0.8s;
-}
-fade-in-quick{
-    animation: fadeIn ease 0.4s;
-}
-@keyframes fadeIn{
-    0%{
-        opacity: 0;
-    }
-    100%{
-        opacity: 1;
-    }
-}
+  @import url("assets/styles.css");
 </style>

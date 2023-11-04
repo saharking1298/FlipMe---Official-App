@@ -1,0 +1,56 @@
+/* Importing Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Jost&family=Open+Sans&display=swap');
+
+#app {
+    font-family: 'Jost', 'Open Sans', sans-serif;
+}
+
+/* Styling Classes */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: -1;
+}
+.center{
+  margin-right: auto;
+  margin-left: auto;
+}
+.flexbox{
+    display: flex;
+}
+.fas{
+    cursor: pointer;
+}
+.fade-in{
+    animation: fadeIn ease 0.8s;
+}
+fade-in-quick{
+    animation: fadeIn ease 0.4s;
+}
+@keyframes fadeIn{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+#wrapper{
+    font-family: 'Jost', sans-serif;
+    margin-right: auto;
+    margin-left: auto;
+    width: 95%;
+    max-width: 600px;
+    transition: background-color 0.2s;
+}
+
+/* Media Queries */
+@media screen and (max-width: 600px) {
+    .optional{
+        display: none;
+    }
+}

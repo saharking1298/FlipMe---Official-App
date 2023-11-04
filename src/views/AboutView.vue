@@ -1,11 +1,7 @@
 <template>
     <div class="background"> </div>
     <div id="wrapper" class="fade-in">
-        <a href="#" alt="Open FlipMe">
-            <div class="heading center">
-                <h1>FlipMe <span class="optional">- A SaharScript Production</span></h1>
-            </div>
-        </a>
+        <app-header> </app-header>
         <section id="app-description">
             <h2> What is FlipMe? </h2>
             <p>
@@ -37,7 +33,9 @@
 </template>
 
 <script>
+import AppHeader from '@/components/AppHeader.vue';
 export default {
+  components: { AppHeader },
     name: "AboutView",
 }
 </script>
@@ -52,32 +50,6 @@ export default {
     }
     a{
         text-decoration: none;
-    }
-    #wrapper{
-        font-family: 'Jost', sans-serif;
-        margin-right: auto;
-        margin-left: auto;
-        width: 60%;
-        transition: background-color 0.2s;
-    }
-    .center{
-        margin-right: auto;
-        margin-left: auto;
-    }
-    .heading{
-        display: block;
-        background-color: rgb(253, 108, 193);
-        width: 100%;
-        padding-bottom: 0px;
-        padding-top: 0px;
-        color: rgb(250, 225, 229);
-        border-radius: 8px;
-        user-select: none;
-        transition: background-color 0.2s;
-        text-align: center;
-    }
-    .heading:hover{
-        background-color: rgb(248, 95, 184);
     }
     .back-icon{
         position: absolute;
@@ -132,29 +104,5 @@ export default {
     }
     #enter-app p {
         margin-top: 1px;
-    }
-
-    /* Media Queries */
-    @media screen and (max-width: 1000px) {
-        #wrapper{
-            width: 60%;
-            margin-right: auto;
-            margin-left: auto;
-        }
-    }
-    @media screen and (max-width: 900px) {
-        #wrapper{
-            width: 90%;
-            margin-right: auto;
-            margin-left: auto;
-        }
-    }
-    @media screen and (max-width: 600px) {
-        .optional{
-            display: none;
-        }
-        .back-icon{
-            display: none;
-        }
     }
 </style>
