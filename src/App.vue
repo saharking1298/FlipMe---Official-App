@@ -7,48 +7,56 @@
 <script>
 export default {
   name: 'App',
-  components: {
-
-  },
   methods: {
-    loadVoteHistory() {
-      let votes = localStorage.getItem('FlipMe.voteHistory');
-      if (votes === null) {
-        votes = [];
-      }
-      else {
+    loadVoteHistory () {
+      let voteHistory = localStorage.getItem('FlipMe.voteHistory');
+      if (voteHistory) {
         try {
-          votes = JSON.parse(votes);
+          voteHistory = JSON.parse(voteHistory);
         }
         catch {
-          votes = [];
+          voteHistory = [];
         }
       }
-      return votes;
+      else {
+        voteHistory = [];
+      }
+      return voteHistory;
     },
-    saveVoteHistory(votes) {
-      votes = votes || this.votes;
-      localStorage.setItem('FlipMe.voteHistory', JSON.stringify(votes));
+    saveVoteHistory () {
+      localStorage.setItem('FlipMe.voteHistory', JSON.stringify(this.voteHistory));
     },
-    getVote(voteIndex) {
-      return this.votes[voteIndex];
+    getPastVote (voteIndex) {
+      return this.voteHistory[voteIndex];
+    },
+    setVoteSettings (voteSettings) {
+      this.currentVote = {...voteSettings};
+      this.currentVote.votes = voteSettings.preset.choices.map(item => {
+        return {name: item, qty: 0};
+      });
     }
   },
   data() {
     return {
-      votes: this.loadVoteHistory(),
+      voteHistory: this.loadVoteHistory(),
+      currentVote: {}
     };
   },
   async mounted() {
       await this.$router.isReady();
-      if(this.votes.length === 0 && ['/home', '/'].includes(this.$route.path)) {
+      if (this.$route.path === '/' && this.voteHistory.length === 0) {
         this.$router.push('/about');
+      }
+      if (this.$route.path === '/vote' && !this.voteSettings) {
+        this.$router.push('/new');
       }
       this.saveVoteHistory();
   },
   provide() {
     return {
-      getVote: this.getVote,
+      setVoteSettings: this.setVoteSettings,
+      getCurrentVote: () => this.currentVote,
+      getPastVote: this.getPastVote,
     };
   },
 }

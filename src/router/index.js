@@ -7,13 +7,8 @@ import NewVote from "@/views/NewVote.vue";
 
 const routes = [
   {
-    path: "/home",
-    name: "Home",
-    component: HomeView,
-  },
-  {
     path: "/",
-    alias: "/home",
+    name: "Home",
     component: HomeView,
   },
   {
@@ -34,11 +29,6 @@ const routes = [
   {
     path: "/votes/:voteId",
     name: "Results",
-    component: VoteResults
-  },
-  {
-    path: "/vote/:voteId",
-    alias: "/votes/:voteId",
     component: VoteResults
   }
 ];

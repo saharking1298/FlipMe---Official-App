@@ -67,6 +67,7 @@ const warnings = {
 
 export default {
     name: "VoteCreator",
+    inject: ["setVoteSettings"],
     created () {
         this.setPreset(presets[0].id);
     },
@@ -98,9 +99,25 @@ export default {
                 preset.choices = [...this.customChoices];
             }
             if (preset.id === "presetCustomRange") {
-                preset.min = parseInt(this.inputs.rangeMinNumber);
-                preset.max = parseInt(this.inputs.rangeMaxNumber);
-                preset.step = preset.max >= preset.min ? 1 : -1;
+                const num1 = parseInt(this.inputs.rangeMaxNumber);
+                const num2 = parseInt(this.inputs.rangeMinNumber);
+                preset.max = Math.max(num1, num2);
+                preset.min = Math.min(num1, num2);
+                preset.step = num1 >= num2 ? 1 : -1;
+            }
+            if (preset.type === "range") {
+                const choices = [];
+                if (preset.step === 1) {
+                    for (let i = preset.min; i <= preset.max; i++) {
+                        choices.push(i);
+                    }
+                }
+                else if (preset.step === -1) {
+                    for (let i = preset.max; i >= preset.min; i--) {
+                        choices.push(i);
+                    }
+                }
+                preset.choices = choices;
             }
 
             if (!this.inputs.votersLimitEnabled) {
@@ -108,6 +125,8 @@ export default {
             }
             console.log(JSON.parse(JSON.stringify(voteSettings)));
             // Start vote with voteSettings - TODO
+            this.setVoteSettings(voteSettings);
+            this.$router.push("/vote");
         },
         showWarning (warning) {
             this.warning.text = warning;

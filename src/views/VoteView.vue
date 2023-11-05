@@ -1,65 +1,120 @@
 <template>
-    <div class="wrapper">
-        <h1> Start a Vote </h1>
-        <h2> What Do You Want To Ask? </h2>
+    <div class="background animated-background"> </div>
+    <div id="vote-screen" :class="votesScreenClass">
+        <h1> Votes Screen </h1>
+        <p> Total Votes: {{ totalVotes }} </p>
+        <h2 class="vote-title"> {{ vote.question }} </h2>
         <div>
-            <label for="question-input">Enter Your Question:</label>
-            <input type="text" v-model="questionInput" id="question-input" class="main-screen-input">
-        </div>
-        <h2> Vote Settings </h2>
-        <div>
-            <input type="checkbox" v-model=currentVote.enableVoteSound id="vote-sound-enabler">
-            <label for="vote-sound-enabler"> Enable Vote Sound </label>
-        </div>
-        <div>
-            <input type="checkbox" v-model="sortResultsEnabled" id="sort-results-enbaler">
-            <label for="sort-results-enbaler"> Sort Results By Number Of Votes </label>
-        </div>
-        <h2>Vote Type:</h2>
-        <div v-for="(preset, index) of presets" :key="index">
-            <input type="radio" name="vote-type" :value="preset.type" v-model="currentPreset" :id="preset.type">
-            <label :for="preset.type">{{preset.name}}</label>
-            <div v-if="preset.type == 'range'" v-show="currentPreset == 'range'">
-                <div>
-                    <label class="range-label" for="min-range">Minimum Number</label>
-                    <input type="number" v-model="rangeMinNumber" class="main-screen-input" id="min-range">  
-                </div>
-                <div class="vertical-separator"></div>
-                <div>
-                    <label class="range-label" for="max-range">Maximum Number</label>
-                    <input type="number" v-model="rangeMaxNumber" class="main-screen-input" id="max-range">  
-                </div>
-                <p v-if="!customRangeValid" class="warning"> Your total range of numbers must be under {{ rangeLimit }} </p>
+            <div v-for="(item, index) in vote.votes" :key="index" @click="onAnswer(index)" class="vote-btn vote-screen-btn">
+                <div class="darker"> {{ item.name }} </div>
             </div>
-            <div v-else-if="preset.type == 'custom'" v-show="currentPreset == 'custom'">
-                <label>Add a custom choice: </label>
-                <input type="text" v-model="customChoiceInput" @keydown.enter="addCustomChoice()" class="main-screen-input">
-                <button @click="addCustomChoice()" id="add-choice-btn"><strong>Add</strong></button>
-                <p class="info" v-if="customChoices.length > 0">Click on a choice to delete it!</p>
-                <div>
-                    <div v-for="(choice, index) in customChoices" class="custom-choice-block" @click="removeCustomChoice(index)" :key="index"> {{choice}} </div>
-                </div>
-            </div>
+            <button @click="finishVote()" id="vote-finish-btn" class="vote-screen-btn">
+                <div class="darker"> Finish Vote </div>
+            </button>
         </div>
-        <button @click="startVote()" class="start-button">Start My Vote!</button>
-        <p class="warning" v-if="showQuestionWarning"> Please enter a question in order to start </p>
-        <p class="warning" v-if="showCustomChoiceWarning"> Oh, looks like you don't have enough choices! Please have at least two. </p>
-        <p class="warning" v-if="showRangeWarning"> Please fix your range! </p>
     </div>
 </template>
 
 <script>
+const sounds = {
+    pop: new Audio(require("@/assets/pop.mp3")),
+};
+
 export default {
     name: "VoteView",
-    props: {
-        preset: {
-            type: Object,
-            required: false
-        }
-    }
+    inject: ["getCurrentVote"],
+    data () {
+        return {
+            vote: this.getCurrentVote(),
+            totalVotes: 0
+        };
+    },
+    created () {
+        console.log(this.vote);
+    },
+    methods: {
+        onAnswer (index) {
+            console.log(this.vote.votes)
+            this.vote.votes[index].qty++;
+            this.totalVotes++;
+            if (this.vote.config.soundEnabled) {
+                sounds.pop.play();
+            }
+        },
+        finishVote () {
+
+        },
+
+    },
 }
 </script>
 
-<style>
-
+<style scoped>
+h1, h2, p {
+    text-align: center;
+    margin: 0;
+}
+#vote-screen {
+    color: white;
+}
+#vote-finish-btn{
+    background-color: rgba(255, 255, 255, 0);
+    padding-left: 15px;
+    padding-right: 15px;
+    color: rgba(250, 225, 229, 0.658);
+}
+#vote-finish-btn>div.darker{
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.vote-title{
+    text-align: center;
+}
+.vote-screen-btn{
+    border-radius: 30px;
+    animation: vote-btn-color-change 10s infinite;
+    border: 2px solid rgba(255, 255, 255, 0.397);
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+.vote-screen-btn:hover{
+    cursor: pointer;
+}
+.vote-btn{
+    width: 90%;
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-size: 1.2em;
+}
+.animated-background{
+    animation: background-color-change 10s infinite;
+}
+/* Animations */
+@keyframes background-color-change{
+    from{
+        background-color: rgb(52, 170, 170);
+    }
+    50%{
+        background-color: rgb(149, 71, 201);
+    }
+    100%{
+        background-color: rgb(52, 170, 170);
+    }
+}
+@keyframes vote-btn-color-change{
+    from{
+        background-color: rgb(149, 71, 201);
+    }
+    50%{
+        background-color: rgb(52, 170, 170);
+    }
+    100%{
+        background-color: rgb(149, 71, 201);
+    }
+}
 </style>
