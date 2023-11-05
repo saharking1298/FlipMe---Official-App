@@ -9,16 +9,14 @@ export default {
   name: 'App',
   methods: {
     loadVoteHistory () {
-      let voteHistory = localStorage.getItem('FlipMe.voteHistory');
-      if (voteHistory) {
-        try {
-          voteHistory = JSON.parse(voteHistory);
-        }
-        catch {
+      let voteHistory;
+      try {
+        voteHistory = JSON.parse(localStorage.getItem('FlipMe.voteHistory'));
+        if (!voteHistory) {
           voteHistory = [];
         }
       }
-      else {
+      catch {
         voteHistory = [];
       }
       return voteHistory;
@@ -35,6 +33,12 @@ export default {
         return {name: item, qty: 0};
       });
       console.log(JSON.parse(JSON.stringify(this.currentVote)));
+    },
+    submitVote (vote) {
+      const index = this.voteHistory.length;
+      this.voteHistory.push(vote);
+      this.saveVoteHistory();
+      this.$router.push("/votes/" + index);
     }
   },
   data() {
@@ -46,10 +50,10 @@ export default {
   async mounted() {
       await this.$router.isReady();
       if (this.$route.path === '/' && this.voteHistory.length === 0) {
-        this.$router.push('/about');
+        this.$router.replace('/about');
       }
       if (this.$route.path === '/vote' && !this.voteSettings) {
-        this.$router.push('/new');
+        this.$router.replace('/new');
       }
       this.saveVoteHistory();
   },
@@ -58,6 +62,7 @@ export default {
       setVoteSettings: this.setVoteSettings,
       getCurrentVote: () => this.currentVote,
       getPastVote: this.getPastVote,
+      submitVote: this.submitVote,
     };
   },
 }

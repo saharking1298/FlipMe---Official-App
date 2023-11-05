@@ -24,7 +24,7 @@ const sounds = {
 
 export default {
     name: "VoteView",
-    inject: ["getCurrentVote"],
+    inject: ["getCurrentVote", "submitVote"],
     data () {
         return {
             vote: this.getCurrentVote(),
@@ -67,8 +67,12 @@ export default {
         },
         finishVote () {
             if (this.vote.config.password !== null) {
-                alert("This vote is password protected!");
+                const input = prompt("Enter the password to finish the current vote:");
+                if (input !== this.vote.config.password) {
+                    return;
+                }
             }
+            this.submitVote(this.vote);
         },
     },
     computed: {

@@ -126,12 +126,12 @@ export default {
                 const choices = [];
                 if (preset.step === 1) {
                     for (let i = preset.min; i <= preset.max; i++) {
-                        choices.push(i);
+                        choices.push(i.toString());
                     }
                 }
                 else if (preset.step === -1) {
                     for (let i = preset.max; i >= preset.min; i--) {
-                        choices.push(i);
+                        choices.push(i.toString());
                     }
                 }
                 preset.choices = choices;

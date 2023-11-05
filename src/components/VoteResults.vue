@@ -1,26 +1,24 @@
 <template>
-    <div id="result-screen">
-        <div class="wrapper">
-            <h1>Results</h1>
-            <p class="info">Question:</p>
-            <h2> {{voteResults.question}} </h2>
-            <ul>
-                <li v-for="(vote, index) in voteResults.votes" :key="index">
-                    <div class="vote-result-bar">
-                        <div class="vote-result-bar-darker" :style="{width: vote.percentage}">
-                            <p class="vote-result-bar-text"> {{vote.option.trim()}} - {{vote.percentage}} ({{vote.votes}} votes) </p>
-                        </div>
+    <div class="results-view">
+        <h1> Results </h1>
+        <p class="info">Question:</p>
+        <h2> {{voteData.question}} </h2>
+        <ul>
+            <li v-for="(item, index) in voteData.results" :key="index">
+                <div class="vote-result-bar">
+                    <div class="vote-result-bar-darker" :style="{width: item.percentage}">
+                        <p class="vote-result-bar-text"> {{item.name}} - {{item.percentage}} ({{item.qty}} votes) </p>
                     </div>
-                </li>
-                <li v-if="currentVote.totalVotes > 0">
-                    <div class="vote-result-bar" id="total-votes">
-                        <p class="total-votes"> Total votes: {{currentVote.totalVotes}} (100.00%)</p>
-                    </div>
-                </li>
-            </ul>
-            <p v-if="['range', 'oneToTen'].in(currentVote.type)" id="vote-avg">Your Vote Average: {{currentVote.average}}</p>
-            <button class="start-button" @click="setScreen('main-screen')"> Start Another Vote </button>
-        </div>
+                </div>
+            </li>
+            <li>
+                <div class="vote-result-bar" id="total-votes">
+                    <p class="total-votes"> Total votes: {{totalVotes}} (100.00%)</p>
+                </div>
+            </li>
+        </ul>
+        <p v-if="voteData.preset.type === 'range'" id="vote-avg"> Your Vote Average: {{voteAverage}} </p>
+        <router-link to="/" class="start-btn"> Go Home </router-link>
     </div>
 </template>
 
@@ -28,7 +26,7 @@
 export default {
     name: "VoteResults",
     props: {
-        voteResults: {
+        voteData: {
             type: Object,
             required: true
         },
@@ -36,10 +34,111 @@ export default {
             type: Boolean,
             required: true
         }
+    },
+    data() {
+        // Calculating total votes
+        let totalVotes = 0;
+        let voteAverage;
+        this.voteData.results.forEach(item => {
+            totalVotes += item.qty;
+        });
+        if (this.voteData.preset.type === 'range') {
+            let sum = 0;
+            this.voteData.results.forEach(item => {
+                sum += parseInt(item.name) * item.qty;
+            });
+            voteAverage = (sum / totalVotes).toFixed(2);
+        }
+        return {
+            totalVotes,
+            voteAverage  
+        };
+    },
+    created() {
+        this.voteData.results.forEach(item => {
+            item.percentage = (item.qty / this.totalVotes * 100).toFixed(2) + "%";
+        });
     }
 }
 </script>
 
 <style scoped>
-
+.results-view {
+    color: white;
+    background: #c45d7f;
+    padding: 15px;
+    border-radius: 8px;
+}
+h1{
+    margin: 0;
+    text-align: center;
+}
+h2{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: center;
+}
+ul{
+    margin-bottom: 15px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.info{
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+#vote-avg{
+    text-align: center;
+    margin-top: 0px;
+}
+#total-votes{
+    background-color: rgba(110, 28, 88, 0.466);
+}
+.vote-result-bar{
+    width: 98%;
+    height: fit-content;
+    background-color: rgb(156, 68, 133);
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    max-width: 350px;
+    text-align: center;
+}
+.vote-result-bar-darker {
+    /* width: 0%; */
+    height: 100%;
+    transition: width 1.5s;
+    border-radius: 8px;
+    background-color: #863170;
+    white-space: nowrap;
+}
+.vote-result-bar-text{
+    margin-left: 20px;
+}
+.start-btn{
+    background-color: rgb(194, 102, 171);
+    border: 3px solid rgb(194, 102, 171);
+    color: rgb(145, 56, 122);
+    width: fit-content;
+    display: block;
+    cursor: pointer;
+    font-size: 1.4em;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 30px;
+    transition: 0.3s;
+    margin-bottom: 10px;
+    user-select: none;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    text-decoration: none;
+}
+.start-btn:hover{
+    background-color: rgb(173, 87, 152);
+    border-color: rgb(173, 87, 152);
+}
 </style>

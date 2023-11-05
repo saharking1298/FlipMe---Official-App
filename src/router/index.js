@@ -2,7 +2,7 @@ import { createWebHistory, createRouter } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import AboutView from "@/views/AboutView.vue";
 import VoteView from "@/views/VoteView.vue";
-import VoteResults from "@/views/VoteResults.vue";
+import VoteResults from "@/views/ResultsView.vue";
 import NewVote from "@/views/NewVote.vue"; 
 
 const routes = [
