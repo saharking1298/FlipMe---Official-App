@@ -1,8 +1,9 @@
 /* Importing Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Jost&family=Open+Sans&display=swap');
 
-#app {
+#app *{
     font-family: 'Jost', 'Open Sans', sans-serif;
+    scroll-behavior: smooth;
 }
 
 /* Styling Classes */
@@ -14,12 +15,25 @@
   width: 100vw;
   z-index: -1;
 }
+.inner-background {
+
+}
 .center{
   margin-right: auto;
   margin-left: auto;
 }
 .block {
     display: block;
+}
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s linear;
 }
 .flexbox{
     display: flex;
@@ -34,6 +48,10 @@
 .fade-in{
     animation: fadeIn ease 0.8s;
 }
+.fade-out{
+    animation: fadeIn ease 0.8s;
+    animation-direction: reverse;
+}
 fade-in-quick{
     animation: fadeIn ease 0.4s;
 }
@@ -47,7 +65,6 @@ fade-in-quick{
 }
 
 #wrapper{
-    font-family: 'Jost', sans-serif;
     margin-right: auto;
     margin-left: auto;
     width: 95%;
