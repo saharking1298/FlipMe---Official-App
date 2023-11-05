@@ -18,6 +18,7 @@ html, body * {
 .center{
   margin-right: auto;
   margin-left: auto;
+  text-align: center;
 }
 .block {
     display: block;

@@ -1,12 +1,12 @@
 <template>
     <div id="vote-creator">
-        <h1> Start a Vote </h1>
-        <h2> What Do You Want To Ask? </h2>
+        <h2> Start a Vote </h2>
+        <h3> What Do You Want To Ask? </h3>
         <div>
             <label class="block" for="question-input">Enter Your Question:</label>
             <input type="text" v-model="voteSettings.question" id="question-input" class="input">
         </div>
-        <h2> Vote Settings </h2>
+        <h3> Vote Settings </h3>
         <div>
             <input type="checkbox" v-model="voteSettings.config.soundEnabled" id="vote-sound-enabler">
             <label for="vote-sound-enabler"> Enable Vote Sound </label>
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <h2>Vote Type:</h2>
+        <h3>Vote Type:</h3>
         <div v-for="(preset, index) of presets" :key="index">
             <input type="radio" :value="preset.id" v-model="currentPreset" :id="preset.id">
             <label :for="preset.id"> {{preset.name}} </label>
@@ -327,13 +327,15 @@ input[type=text]{
     text-decoration: line-through;
     cursor: pointer;
 }
-h1 {
+h2 {
     margin: 0;
     text-align: center;
+    font-size: 1.75em;
 }
-h2 {
+h3 {
     margin-top: 10px;
     margin-bottom: 10px;
+    font-size: 1.5em;
 }
 .vertical-separator{
     height: 7px;

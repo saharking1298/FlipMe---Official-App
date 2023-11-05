@@ -36,6 +36,8 @@ export default {
     },
     submitVote (vote) {
       const index = this.voteHistory.length;
+      const date = new Date();
+      vote.date = date.toLocaleString();
       this.voteHistory.push(vote);
       this.saveVoteHistory();
       this.$router.push("/votes/" + index);
@@ -53,7 +55,7 @@ export default {
         this.$router.replace('/about');
       }
       if (this.$route.path === '/vote' && !this.voteSettings) {
-        this.$router.replace('/new');
+        this.$router.replace('/');
       }
       this.saveVoteHistory();
   },
@@ -62,6 +64,7 @@ export default {
       setVoteSettings: this.setVoteSettings,
       getCurrentVote: () => this.currentVote,
       getPastVote: this.getPastVote,
+      getVoteHistory: () => this.voteHistory,
       submitVote: this.submitVote,
     };
   },

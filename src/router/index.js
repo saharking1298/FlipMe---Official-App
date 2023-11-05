@@ -3,7 +3,6 @@ import HomeView from "@/views/HomeView.vue";
 import AboutView from "@/views/AboutView.vue";
 import VoteView from "@/views/VoteView.vue";
 import VoteResults from "@/views/ResultsView.vue";
-import NewVote from "@/views/NewVote.vue"; 
 
 const routes = [
   {
@@ -15,11 +14,6 @@ const routes = [
     path: "/about",
     name: "About",
     component: AboutView,
-  },
-  {
-    path: "/new",
-    name: "NewVote",
-    component: NewVote,
   },
   {
     path: "/vote",

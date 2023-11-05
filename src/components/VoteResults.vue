@@ -1,7 +1,7 @@
 <template>
     <div class="results-view">
-        <h1> Results </h1>
-        <p class="info">Question:</p>
+        <h1> Vote Results </h1>
+        <p class="info"> Question: </p>
         <h2> {{voteData.question}} </h2>
         <ul>
             <li v-for="(item, index) in voteData.results" :key="index">
@@ -65,9 +65,16 @@ export default {
 <style scoped>
 .results-view {
     color: white;
-    background: #c45d7f;
+    background: rgba(0, 0, 0, 0.1);
     padding: 15px;
     border-radius: 8px;
+    transition: background 0.1s;
+}
+.results-view:hover {
+    background: rgba(0, 0, 0, 0.125);
+}
+.results-view *::selection {
+    background: rgba(0, 0, 0, 0.125);
 }
 h1{
     margin: 0;
@@ -88,6 +95,7 @@ ul{
     text-align: center;
     margin-top: 0px;
     margin-bottom: 0px;
+    color: rgba(250, 225, 229, 0.568);
 }
 #vote-avg{
     text-align: center;
