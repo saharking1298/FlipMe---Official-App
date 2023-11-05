@@ -1,6 +1,7 @@
 <template>
     <div class="background animated-background"> </div>
     <div id="vote-screen">
+        <font-awesome-icon icon="rotate-left" id="vote-undo-btn" v-if="lastChoice !== null" @click="onVoteRevert"/>
         <h1> Votes Screen </h1>
         <p> Total Votes: {{ totalVotes }} </p>
         <h2> {{ vote.question }} </h2>
@@ -17,7 +18,8 @@
 
 <script>
 const sounds = {
-    pop: new Audio(require("@/assets/pop.mp3")),
+    vote: new Audio(require("@/assets/audio/vote.mp3")),
+    revert: new Audio(require("@/assets/audio/revert.mp3"))
 };
 
 export default {
@@ -26,9 +28,9 @@ export default {
     data () {
         return {
             vote: this.getCurrentVote(),
-            totalVotes: 0,
             voteActive: true,
-            voteVisible: true
+            voteVisible: true,
+            lastChoice: null,
         };
     },
     methods: {
@@ -38,26 +40,43 @@ export default {
                 return;
             }
 
-            // 
+            // Adding vote to results
             this.vote.results[index].qty++;
-            this.totalVotes++;
+
+            // Making UX effects
             this.voteVisible = false;
             this.voteActive = false;
+            this.lastChoice = index;
             window.scrollTo(0, 0);
             setTimeout(() => {
                 this.voteVisible = true;
             }, 500);
             setTimeout(() => {
                 this.voteActive = true;
-            }, 750);
+            }, 1000);
             if (this.vote.config.soundEnabled) {
-                sounds.pop.play();
+                sounds.vote.play();
+            }
+        },
+        onVoteRevert () {
+            this.vote.results[this.lastChoice].qty--;
+            this.lastChoice = null;
+            if (this.vote.config.soundEnabled) {
+                sounds.revert.play();
             }
         },
         finishVote () {
-
+            if (this.vote.config.password !== null) {
+                alert("This vote is password protected!");
+            }
         },
-
+    },
+    computed: {
+        totalVotes () {
+            let sum = 0;
+            this.vote.results.forEach(item => { sum += item.qty });
+            return sum;
+        },
     },
 }
 </script>
@@ -76,6 +95,12 @@ h1, h2, p {
 }
 #vote-screen:hover {
     background-color: rgba(0, 0, 0, 0.125);
+}
+#vote-undo-btn {
+    position: absolute;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 10px;
 }
 #vote-finish-btn {
     background-color: rgba(255, 255, 255, 0);

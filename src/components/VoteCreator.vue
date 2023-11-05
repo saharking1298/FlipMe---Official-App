@@ -16,9 +16,15 @@
             <label for="sort-results-enabler"> Sort Results By Number Of Votes </label>
         </div>
         <div>
-            <input type="checkbox" v-model="inputs.votersLimitEnabled" id="voter-limit-enabler">
-            <label for="voter-limit-enabler"> Limit Number Of Voters </label>
-            <input type="number" id="voters-limit" :disabled="!inputs.votersLimitEnabled" min="2" max="1000" v-model="voteSettings.config.votersLimit">
+            <input type="checkbox" v-model="inputs.passwordEnabled" id="vote-password-enabler">
+            <label for="vote-password-enabler"> Lock Vote With Password </label>
+            <div class="indent" v-if="inputs.passwordEnabled">
+                <label for="vote-password-input"> Enter Vote Password: </label>
+                <div>
+                    <input id="vote-password-input" :type="showPassword ? 'text' : 'password'" :disabled="!inputs.passwordEnabled" v-model="voteSettings.config.password" class="input">
+                    <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" @click="togglePasswordVisibility" id="eye-toggle"/>
+                </div>
+            </div>
         </div>
         <h2>Vote Type:</h2>
         <div v-for="(preset, index) of presets" :key="index">
@@ -32,7 +38,7 @@
                 <div class="vertical-separator"></div>
                 <div>
                     <label class="range-label" for="max-range">Maximum Number</label>
-                    <input type="number" v-model="inputs.rangeMaxNumber" class="input" id="max-range">  
+                    <input type="number" v-model="inputs.rangeMaxNumber" class="input"  id="max-range">
                 </div>
             </div>
             <div v-if="preset.id === 'presetCustomChoice'" v-show="currentPreset === 'presetCustomChoice'">
@@ -63,6 +69,7 @@ const presets = [
 const warnings = {
     missingQuestion: "Please enter the vote question!",
     missingChoices: "Please enter at least 2 possible answers!",
+    missingPassword: "Please enter a valid vote password!"
 };
 
 export default {
@@ -89,6 +96,16 @@ export default {
             // Validating vote question
             if (voteSettings.question.trim().length === 0) {
                 return this.showWarning(warnings.missingQuestion);
+            }
+
+            // Validating vote password
+            if (this.inputs.passwordEnabled) {
+                if (voteSettings.config.password.length === 0) {
+                    return this.showWarning(warnings.missingPassword);
+                }
+            }
+            else {
+                voteSettings.config.password = null;
             }
 
             // Validating custom vote presets
@@ -120,9 +137,6 @@ export default {
                 preset.choices = choices;
             }
 
-            if (!this.inputs.votersLimitEnabled) {
-                voteSettings.config.votersLimit = -1;
-            }
             // Start vote with voteSettings - TODO
             this.setVoteSettings(voteSettings);
             this.$router.push("/vote");
@@ -132,6 +146,7 @@ export default {
             this.warning.active = true;
         },
         hideWarning () {
+            this.warning.text = "";
             this.warning.active = false;
         },
         addCustomChoice () {
@@ -143,6 +158,9 @@ export default {
         },
         removeCustomChoice (index) {
             this.customChoices.splice(index, 1);
+        },
+        togglePasswordVisibility () {
+            this.showPassword = !this.showPassword;
         }
     },
     data () {
@@ -157,7 +175,7 @@ export default {
                 config: {
                     soundEnabled: true,
                     sortResults: false,
-                    votersLimit: 10
+                    password: ""
                 },
                 preset: null
             },
@@ -167,9 +185,10 @@ export default {
                 customChoice: "",
                 rangeMinNumber: "0",
                 rangeMaxNumber: "10",
-                votersLimitEnabled: false,
+                passwordEnabled: false,
             },
-            currentPreset: ""
+            currentPreset: "",
+            showPassword: false,
         };
     },
     watch: {
@@ -188,7 +207,12 @@ export default {
             if (this.warning.text === warnings.missingQuestion) {
                 this.hideWarning();
             }
-        }
+        },
+        "voteSettings.config.password" () {
+            if (this.warning.text === warnings.missingPassword) {
+                this.hideWarning();
+            }
+        },
     },
 }
 </script>
@@ -214,11 +238,17 @@ export default {
     margin-top: 4px;
     margin-left: 0;
 }
+#eye-toggle {
+    margin-left: 5px;
+    cursor: pointer;
+}
+.indent {
+    margin-left: 25px;
+}
 .input{
     border-radius: 5px;
     color: rgb(250, 225, 229);
     background-color: rgba(0, 0, 0, 0.096);
-    margin-left: 8px;
     border: 2px solid rgb(156, 53, 87);
     width: 70%;
 }
@@ -230,7 +260,8 @@ input[type=text]{
     font-size: 1.05em;
 }
 .range-label{
-    margin-right: 6px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 .warning{
     color:rgb(148, 17, 17);

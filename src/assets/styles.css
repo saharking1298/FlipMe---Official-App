@@ -1,7 +1,7 @@
 /* Importing Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Jost&family=Open+Sans&display=swap');
 
-#app *{
+html, body * {
     font-family: 'Jost', 'Open Sans', sans-serif;
     scroll-behavior: smooth;
 }
