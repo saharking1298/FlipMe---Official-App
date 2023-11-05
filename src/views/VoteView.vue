@@ -5,8 +5,8 @@
         <p> Total Votes: {{ totalVotes }} </p>
         <h2> {{ vote.question }} </h2>
         <div class="fade-in" :class="voteVisible ? 'visible': 'hidden'">
-            <div v-for="(item, index) in vote.votes" :key="index" @click="onAnswer(index)" class="vote-btn animated-btn">
-                <div class="darker"> {{ item.name }} </div>
+            <div v-for="(item, index) in vote.preset.choices" :key="index" @click="onAnswer(index)" class="vote-btn animated-btn">
+                <div class="darker"> {{ item }} </div>
             </div>
             <button @click="finishVote()" id="vote-finish-btn" class="animated-btn">
                 <div class="darker"> Finish Vote </div>
@@ -33,10 +33,13 @@ export default {
     },
     methods: {
         onAnswer (index) {
+            // Checking if vote is active
             if (!this.voteActive) {
                 return;
             }
-            this.vote.votes[index].qty++;
+
+            // 
+            this.vote.results[index].qty++;
             this.totalVotes++;
             this.voteVisible = false;
             this.voteActive = false;

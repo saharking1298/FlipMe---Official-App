@@ -123,7 +123,6 @@ export default {
             if (!this.inputs.votersLimitEnabled) {
                 voteSettings.config.votersLimit = -1;
             }
-            console.log(JSON.parse(JSON.stringify(voteSettings)));
             // Start vote with voteSettings - TODO
             this.setVoteSettings(voteSettings);
             this.$router.push("/vote");

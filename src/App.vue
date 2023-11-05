@@ -31,9 +31,10 @@ export default {
     },
     setVoteSettings (voteSettings) {
       this.currentVote = {...voteSettings};
-      this.currentVote.votes = voteSettings.preset.choices.map(item => {
+      this.currentVote.results = voteSettings.preset.choices.map(item => {
         return {name: item, qty: 0};
       });
+      console.log(JSON.parse(JSON.stringify(this.currentVote)));
     }
   },
   data() {
