@@ -1,5 +1,8 @@
 <template>
     <div class="results-view">
+        <router-link to="/">
+            <font-awesome-icon icon="arrow-left" class="back-btn"/>
+        </router-link>
         <h1> Vote Results </h1>
         <p class="info"> Question: </p>
         <h2> {{voteData.question}} </h2>
@@ -18,22 +21,23 @@
             </li>
         </ul>
         <p v-if="voteData.preset.type === 'range'" id="vote-avg"> Your Vote Average: {{voteAverage}} </p>
-        <router-link to="/" class="start-btn"> Go Home </router-link>
+        <button class="start-btn" @click="deleteVote"> Delete Vote </button>
     </div>
 </template>
 
 <script>
 export default {
     name: "VoteResults",
+    inject: ["deletePastVote"],
     props: {
         voteData: {
             type: Object,
             required: true
         },
-        onHomepage: {
-            type: Boolean,
+        voteIndex: {
+            type: Number,
             required: true
-        }
+        },
     },
     data() {
         // Calculating total votes
@@ -58,11 +62,26 @@ export default {
         this.voteData.results.forEach(item => {
             item.percentage = (item.qty / this.totalVotes * 100).toFixed(2) + "%";
         });
-    }
+    },
+    methods: {
+        deleteVote () {
+            if (confirm("Delete this vote?")) {
+                this.deletePastVote(this.voteIndex);
+                this.$router.push("/");
+            }
+        }  
+    },
 }
 </script>
 
 <style scoped>
+.back-btn {
+    cursor: pointer;
+    position: absolute;
+    margin-left: 10px;
+    margin-top: 12px;
+    color: white;
+}
 .results-view {
     color: white;
     background: rgba(0, 0, 0, 0.1);

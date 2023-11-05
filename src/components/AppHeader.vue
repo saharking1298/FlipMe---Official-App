@@ -1,12 +1,17 @@
 <template>
-    <router-link class="heading center" to="/">
+    <router-link class="heading center" :to="link">
         <h1>FlipMe <span class="optional">- A SaharScript Production</span></h1>
     </router-link>
 </template>
 
 <script>
 export default {
-    name: "AppHeader"
+    name: "AppHeader",
+    data () {
+        return {
+            link: this.$route.path === '/' ? '/about' : '/',
+        };
+    },
 }
 </script>
 

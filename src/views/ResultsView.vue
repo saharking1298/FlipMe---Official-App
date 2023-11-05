@@ -1,7 +1,7 @@
 <template>
     <div class="background"></div>
     <app-header> </app-header>
-    <vote-results :on-homepage="false" :vote-data="voteData"> </vote-results>
+    <vote-results :vote-data="voteData" :vote-index="voteId"> </vote-results>
 </template>
 
 <script>
@@ -14,9 +14,10 @@ export default {
     inject: ["getPastVote"],
     data() {
         const route = useRoute();
-        const voteId = route.params.voteId;
+        const voteId = parseInt(route.params.voteId);
         return {
             voteData: this.getPastVote(voteId),
+            voteId
         };
     }
 }

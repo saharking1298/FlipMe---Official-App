@@ -7,7 +7,7 @@
         <div v-if="voteHistory.length > 0">
             <div class="past-vote-card section" v-for="(item, index) in voteHistory" :key="index">
                 <router-link :to="`/votes/${index}`" class="past-vote-link"> {{ item.question }} </router-link>
-                <div>
+                <div class="past-vote-date">
                     <font-awesome-icon icon="calendar" />
                     {{ item.date }}
                 </div>
@@ -55,7 +55,15 @@ h2 {
     background: rgba(0, 0, 0, 0.125);
 }
 .past-vote-link {
-    text-align: center;
+    margin-top: -5px;
     color: rgb(116, 40, 95);
+    display: block;
+    text-align: center;
+    font-size: 1.25em;
+}
+.past-vote-date {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>

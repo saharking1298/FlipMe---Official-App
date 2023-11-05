@@ -27,6 +27,10 @@ export default {
     getPastVote (voteIndex) {
       return this.voteHistory[voteIndex];
     },
+    deletePastVote (voteIndex) {
+      this.voteHistory.splice(voteIndex, 1);
+      this.saveVoteHistory();
+    },
     setVoteSettings (voteSettings) {
       this.currentVote = {...voteSettings};
       this.currentVote.results = voteSettings.preset.choices.map(item => {
@@ -66,6 +70,7 @@ export default {
       getPastVote: this.getPastVote,
       getVoteHistory: () => this.voteHistory,
       submitVote: this.submitVote,
+      deletePastVote: this.deletePastVote,
     };
   },
 }
