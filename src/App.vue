@@ -46,6 +46,11 @@ export default {
         delete vote.preset.choices;
       }
 
+      // Sorting answers from common to rare
+      if (vote.preset.type !== "range") {
+        vote.results.sort((a, b) => b.qty - a.qty);
+      }
+
       // Saving vote
       this.voteHistory.push(vote);
       saveVoteHistory(this.voteHistory);
@@ -60,7 +65,7 @@ export default {
   },
   async mounted() {
       await this.$router.isReady();
-      if (this.$route.name === 'Home' && this.voteHistory.length === 0) {
+      if (this.$route.name === 'Home' && this.voteHistory.length === 0 && !this.currentVote) {
         this.$router.replace({name: "About"});
       }
       // saveVoteHistory(this.voteHistory);

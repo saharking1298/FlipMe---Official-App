@@ -12,10 +12,6 @@
             <label for="vote-sound-enabler"> Enable Vote Sound </label>
         </div>
         <div>
-            <input type="checkbox" v-model="voteSettings.config.sortResults" id="sort-results-enabler">
-            <label for="sort-results-enabler"> Sort Results By Number Of Votes </label>
-        </div>
-        <div>
             <input type="checkbox" v-model="inputs.passwordEnabled" id="vote-password-enabler">
             <label for="vote-password-enabler"> Lock Vote With Password </label>
             <div class="indent" v-if="inputs.passwordEnabled">
@@ -174,7 +170,6 @@ export default {
                 question: "",
                 config: {
                     soundEnabled: true,
-                    sortResults: false,
                     password: ""
                 },
                 preset: null
