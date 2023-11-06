@@ -1,7 +1,7 @@
 <template>
     <div class="background animated-background"> </div>
     <div id="vote-screen">
-        <font-awesome-icon icon="rotate-left" id="vote-undo-btn" v-if="lastChoice !== null" @click="onVoteRevert"/>
+        <font-awesome-icon icon="rotate-left" id="vote-undo-btn" v-if="vote.lastChoice !== null" @click="onVoteRevert"/>
         <h1> Votes Screen </h1>
         <p> Total Votes: {{ totalVotes }} </p>
         <h2> {{ vote.question }} </h2>
@@ -24,13 +24,12 @@ const sounds = {
 
 export default {
     name: "VoteView",
-    inject: ["getCurrentVote", "submitVote"],
+    inject: ["loadCurrentVote", "submitCurrentVote", "saveCurrentVote"],
     data () {
         return {
-            vote: this.getCurrentVote(),
+            vote: this.loadCurrentVote(),
             voteActive: true,
             voteVisible: true,
-            lastChoice: null,
         };
     },
     methods: {
@@ -42,11 +41,12 @@ export default {
 
             // Adding vote to results
             this.vote.results[index].qty++;
+            this.vote.lastChoice = index;
+            this.saveCurrentVote(this.vote);
 
             // Making UX effects
             this.voteVisible = false;
             this.voteActive = false;
-            this.lastChoice = index;
             window.scrollTo(0, 0);
             setTimeout(() => {
                 this.voteVisible = true;
@@ -59,20 +59,24 @@ export default {
             }
         },
         onVoteRevert () {
-            this.vote.results[this.lastChoice].qty--;
-            this.lastChoice = null;
+            this.vote.results[this.vote.lastChoice].qty--;
+            this.vote.lastChoice = null;
+            this.saveCurrentVote(this.vote);
             if (this.vote.config.soundEnabled) {
                 sounds.revert.play();
             }
         },
         finishVote () {
+            if (this.totalVotes === 0) {
+                return;
+            }
             if (this.vote.config.password !== null) {
                 const input = prompt("Enter the password to finish the current vote:");
                 if (input !== this.vote.config.password) {
                     return;
                 }
             }
-            this.submitVote(this.vote);
+            this.submitCurrentVote(this.vote);
         },
     },
     computed: {

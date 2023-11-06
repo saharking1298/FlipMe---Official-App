@@ -5,52 +5,57 @@
 </template>
 
 <script>
+import {saveVoteHistory, loadVoteHistory, saveCurrentVote, loadCurrentVote} from "@/scripts/utils.js";
+
 export default {
   name: 'App',
   methods: {
-    loadVoteHistory () {
-      let voteHistory;
-      try {
-        voteHistory = JSON.parse(localStorage.getItem('FlipMe.voteHistory'));
-        if (!voteHistory) {
-          voteHistory = [];
-        }
-      }
-      catch {
-        voteHistory = [];
-      }
-      return voteHistory;
-    },
-    saveVoteHistory () {
-      localStorage.setItem('FlipMe.voteHistory', JSON.stringify(this.voteHistory));
-    },
     getPastVote (voteIndex) {
       return this.voteHistory[voteIndex];
     },
     deletePastVote (voteIndex) {
       this.voteHistory.splice(voteIndex, 1);
-      this.saveVoteHistory();
+      saveVoteHistory(this.voteHistory);
     },
     setVoteSettings (voteSettings) {
       this.currentVote = {...voteSettings};
       this.currentVote.results = voteSettings.preset.choices.map(item => {
         return {name: item, qty: 0};
       });
-      console.log(JSON.parse(JSON.stringify(this.currentVote)));
+      this.currentVote.lastChoice = null;
+      saveCurrentVote(this.currentVote);
     },
-    submitVote (vote) {
+    submitCurrentVote (vote) {
       const index = this.voteHistory.length;
+
+      // Resetting current vote
+      saveCurrentVote(null);
+
+      // Setting vote date
       const date = new Date();
       vote.date = date.toLocaleString();
+
+      // Removing session data
+      if (vote.lastChoice) {
+        delete vote.lastChoice;
+      }
+      if (vote.config) {
+        delete vote.config;
+      }
+      if (vote.preset.type === "range" && vote.preset.choices) {
+        delete vote.preset.choices;
+      }
+
+      // Saving vote
       this.voteHistory.push(vote);
-      this.saveVoteHistory();
+      saveVoteHistory(this.voteHistory);
       this.$router.push("/votes/" + index);
     }
   },
   data() {
     return {
-      voteHistory: this.loadVoteHistory(),
-      currentVote: {}
+      voteHistory: loadVoteHistory(),
+      currentVote: loadCurrentVote(),
     };
   },
   async mounted() {
@@ -58,19 +63,17 @@ export default {
       if (this.$route.path === '/' && this.voteHistory.length === 0) {
         this.$router.replace('/about');
       }
-      if (this.$route.path === '/vote' && !this.voteSettings) {
-        this.$router.replace('/');
-      }
-      this.saveVoteHistory();
+      // saveVoteHistory(this.voteHistory);
   },
   provide() {
     return {
       setVoteSettings: this.setVoteSettings,
-      getCurrentVote: () => this.currentVote,
       getPastVote: this.getPastVote,
-      getVoteHistory: () => this.voteHistory,
-      submitVote: this.submitVote,
+      loadVoteHistory: () => this.voteHistory,
+      submitCurrentVote: this.submitCurrentVote,
       deletePastVote: this.deletePastVote,
+      saveCurrentVote,
+      loadCurrentVote,
     };
   },
 }

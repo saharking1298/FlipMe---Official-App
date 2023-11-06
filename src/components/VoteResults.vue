@@ -131,7 +131,6 @@ ul{
     margin-bottom: 5px;
     border-radius: 8px;
     max-width: 350px;
-    text-align: center;
 }
 .vote-result-bar-darker {
     /* width: 0%; */

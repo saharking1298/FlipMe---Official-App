@@ -1,13 +1,23 @@
 <template>
     <div class="background"></div>
     <app-header> </app-header>
-    <vote-creator> </vote-creator>  
+    <vote-creator> </vote-creator>
+    <div class="section" v-if="currentVote !== null">
+        <h2> Ongoing Votes </h2>
+        <div class="section">
+            <router-link to="/vote" class="vote-link"> {{ currentVote.question }} </router-link>
+            <div class="vote-date">
+                    <font-awesome-icon icon="calendar" />
+                    {{ currentVote.date }}
+                </div>
+        </div>
+    </div>
     <div class="section">
         <h2> Vote History </h2>
-        <div v-if="voteHistory.length > 0">
-            <div class="past-vote-card section" v-for="(item, index) in voteHistory" :key="index">
-                <router-link :to="`/votes/${index}`" class="past-vote-link"> {{ item.question }} </router-link>
-                <div class="past-vote-date">
+        <div v-if="reversedVoteHistory.length > 0">
+            <div class="section" v-for="(item, index) in reversedVoteHistory" :key="index">
+                <router-link :to="`/votes/${index}`" class="vote-link"> {{ item.question }} </router-link>
+                <div class="vote-date">
                     <font-awesome-icon icon="calendar" />
                     {{ item.date }}
                 </div>
@@ -23,11 +33,17 @@ import VoteCreator from '@/components/VoteCreator.vue'
 export default {
     components: { AppHeader, VoteCreator },
     name: 'HomeView',
-    inject: ["getVoteHistory"],
+    inject: ["loadVoteHistory", "loadCurrentVote"],
     data () {
         return {
-            voteHistory: this.getVoteHistory(),
+            voteHistory: this.loadVoteHistory(),
+            currentVote: this.loadCurrentVote(),
         };
+    },
+    computed: {
+        reversedVoteHistory () {
+            return this.voteHistory.slice().reverse();
+        }
     },
 }
 </script>
@@ -54,14 +70,14 @@ h2 {
 .results-view:hover {
     background: rgba(0, 0, 0, 0.125);
 }
-.past-vote-link {
+.vote-link {
     margin-top: -5px;
     color: rgb(116, 40, 95);
     display: block;
     text-align: center;
     font-size: 1.25em;
 }
-.past-vote-date {
+.vote-date {
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
