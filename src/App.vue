@@ -64,7 +64,6 @@ export default {
       this.$router.push({name: "Results", params: {voteId: index}});
     },
     setClonedVote (voteIndex) {
-      console.log(typeof voteIndex)
       if (typeof voteIndex === 'number') {
         this.clonedVote = this.voteHistory[voteIndex];
       }
