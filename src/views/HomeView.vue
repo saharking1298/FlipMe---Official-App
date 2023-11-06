@@ -16,7 +16,7 @@
         <h2> Vote History </h2>
         <div v-if="reversedVoteHistory.length > 0">
             <div class="section" v-for="(item, index) in reversedVoteHistory" :key="index">
-                <router-link :to="{name: 'Results', params: {voteId: item.index}}" class="vote-link"> {{ item.question }} </router-link>
+                <router-link :to="{name: 'Results', params: {voteId: reversedVoteHistory.length - 1 - index}}" class="vote-link"> {{ item.question }} </router-link>
                 <div class="vote-date">
                     <font-awesome-icon icon="calendar" />
                     {{ item.date }}
@@ -42,11 +42,7 @@ export default {
     },
     computed: {
         reversedVoteHistory () {
-            const arr = this.voteHistory.slice();
-            for (let i = 0; i < arr.length; i++) {
-                arr[i].index = i;
-            }
-            return arr.reverse();
+            return this.voteHistory.slice().reverse();
         }
     },
 }

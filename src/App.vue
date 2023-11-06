@@ -77,7 +77,6 @@ export default {
       if (this.$route.name === 'Home' && this.voteHistory.length === 0 && !this.currentVote) {
         this.$router.replace({name: "About"});
       }
-      // saveVoteHistory(this.voteHistory);
   },
   provide() {
     return {
