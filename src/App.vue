@@ -9,6 +9,13 @@ import {saveVoteHistory, loadVoteHistory, saveCurrentVote, loadCurrentVote} from
 
 export default {
   name: 'App',
+  data() {
+    return {
+      voteHistory: loadVoteHistory(),
+      currentVote: loadCurrentVote(),
+      clonedVote: null,
+    };
+  },
   methods: {
     getPastVote (voteIndex) {
       return this.voteHistory[voteIndex];
@@ -55,13 +62,16 @@ export default {
       this.voteHistory.push(vote);
       saveVoteHistory(this.voteHistory);
       this.$router.push({name: "Results", params: {voteId: index}});
-    }
-  },
-  data() {
-    return {
-      voteHistory: loadVoteHistory(),
-      currentVote: loadCurrentVote(),
-    };
+    },
+    setClonedVote (voteIndex) {
+      console.log(typeof voteIndex)
+      if (typeof voteIndex === 'number') {
+        this.clonedVote = this.voteHistory[voteIndex];
+      }
+      else {
+        this.clonedVote = null;
+      }
+    },
   },
   async mounted() {
       await this.$router.isReady();
@@ -75,8 +85,10 @@ export default {
       setVoteSettings: this.setVoteSettings,
       getPastVote: this.getPastVote,
       loadVoteHistory: () => this.voteHistory,
+      getClonedVote: () => this.clonedVote,
       submitCurrentVote: this.submitCurrentVote,
       deletePastVote: this.deletePastVote,
+      setClonedVote: this.setClonedVote,
       saveCurrentVote,
       loadCurrentVote,
     };

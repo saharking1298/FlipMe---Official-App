@@ -55,7 +55,7 @@
 <script>
 // Defining presets
 const presets = [
-    {name: "1 - 10", id: "presetDefaultRange", type: "range", min: 1, max: 10, step: 1}, 
+    {name: "1 - 10", id: "presetDefaultRange", type: "range", min: 1, max: 10}, 
     {name: "Yes / No", id: "presetYesNo", type: "choice", choices: ["Yes", "No"]},
     {name: "Custom Range", id: "presetCustomRange", type: "range"},
     {name: "Custom Choice", id: "presetCustomChoice", type: "choice"}
@@ -70,9 +70,51 @@ const warnings = {
 
 export default {
     name: "VoteCreator",
-    inject: ["setVoteSettings"],
+    inject: ["setVoteSettings", "getClonedVote", "setClonedVote"],
+    data () {
+        return {
+            presets,
+            warning: {
+                active: false,
+                text: ""
+            },
+            voteSettings: {
+                question: "",
+                config: {
+                    soundEnabled: true,
+                    password: ""
+                },
+                preset: null
+            },
+            customChoices: [],
+            inputs: {
+                question: "",
+                customChoice: "",
+                rangeMinNumber: "0",
+                rangeMaxNumber: "10",
+                passwordEnabled: false,
+            },
+            currentPreset: "",
+            showPassword: false,
+        };
+    },
     created () {
-        this.setPreset(presets[0].id);
+        const clonedVote = this.getClonedVote();
+        if (clonedVote) {
+            this.voteSettings.question = clonedVote.question;
+            this.setPreset(clonedVote.preset.id);
+            if (clonedVote.preset.id === "presetCustomRange") {
+                this.inputs.rangeMinNumber = clonedVote.preset.min.toString();
+                this.inputs.rangeMinNumber = clonedVote.preset.max.toString();
+            }
+            if (clonedVote.preset.id === "presetCustomChoice") {
+                this.customChoices = clonedVote.preset.choices;
+            }
+            this.setClonedVote(null);
+        }
+        else {
+            this.setPreset(presets[0].id);
+        }
     },
     methods: {
         setPreset (presetId) {
@@ -116,16 +158,15 @@ export default {
                 const num2 = parseInt(this.inputs.rangeMinNumber);
                 preset.max = Math.max(num1, num2);
                 preset.min = Math.min(num1, num2);
-                preset.step = num1 >= num2 ? 1 : -1;
             }
             if (preset.type === "range") {
                 const choices = [];
-                if (preset.step === 1) {
+                if (preset.max >= preset.min) {
                     for (let i = preset.min; i <= preset.max; i++) {
                         choices.push(i.toString());
                     }
                 }
-                else if (preset.step === -1) {
+                else {
                     for (let i = preset.max; i >= preset.min; i--) {
                         choices.push(i.toString());
                     }
@@ -158,33 +199,6 @@ export default {
         togglePasswordVisibility () {
             this.showPassword = !this.showPassword;
         }
-    },
-    data () {
-        return {
-            presets,
-            warning: {
-                active: false,
-                text: ""
-            },
-            voteSettings: {
-                question: "",
-                config: {
-                    soundEnabled: true,
-                    password: ""
-                },
-                preset: null
-            },
-            customChoices: [],
-            inputs: {
-                question: "",
-                customChoice: "",
-                rangeMinNumber: "0",
-                rangeMaxNumber: "10",
-                passwordEnabled: false,
-            },
-            currentPreset: "",
-            showPassword: false,
-        };
     },
     watch: {
         currentPreset (value) {

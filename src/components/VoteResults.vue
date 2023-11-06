@@ -16,19 +16,22 @@
             </li>
             <li>
                 <div class="vote-result-bar" id="total-votes">
-                    <p class="total-votes"> Total votes: {{totalVotes}} (100.00%)</p>
+                    <p class="total-votes vote-result-bar-text"> Total votes: {{totalVotes}} (100.00%)</p>
                 </div>
             </li>
         </ul>
         <p v-if="voteData.preset.type === 'range'" id="vote-avg"> Your Vote Average: {{voteAverage}} </p>
-        <button class="start-btn" @click="deleteVote"> Delete Vote </button>
+        <div class="flexbox">
+            <button class="start-btn" @click="cloneVote"> Clone Vote </button>
+            <button class="start-btn" @click="deleteVote"> Delete Vote </button>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     name: "VoteResults",
-    inject: ["deletePastVote"],
+    inject: ["deletePastVote", "setClonedVote"],
     props: {
         voteData: {
             type: Object,
@@ -69,12 +72,19 @@ export default {
                 this.deletePastVote(this.voteIndex);
                 this.$router.push({name: "Home"});
             }
-        }  
+        },
+        cloneVote () {
+            this.setClonedVote(this.voteIndex);
+            this.$router.push({name: "Home"});
+        }
     },
 }
 </script>
 
 <style scoped>
+.flexbox {
+    flex-wrap: wrap;
+}
 .back-btn {
     cursor: pointer;
     position: absolute;
