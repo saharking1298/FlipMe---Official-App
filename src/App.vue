@@ -49,7 +49,7 @@ export default {
       // Saving vote
       this.voteHistory.push(vote);
       saveVoteHistory(this.voteHistory);
-      this.$router.push("/votes/" + index);
+      this.$router.push({name: "Results", params: {voteId: index}});
     }
   },
   data() {
@@ -60,8 +60,8 @@ export default {
   },
   async mounted() {
       await this.$router.isReady();
-      if (this.$route.path === '/' && this.voteHistory.length === 0) {
-        this.$router.replace('/about');
+      if (this.$route.name === 'Home' && this.voteHistory.length === 0) {
+        this.$router.replace({name: "About"});
       }
       // saveVoteHistory(this.voteHistory);
   },

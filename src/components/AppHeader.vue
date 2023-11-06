@@ -9,7 +9,7 @@ export default {
     name: "AppHeader",
     data () {
         return {
-            link: this.$route.path === '/' ? '/about' : '/',
+            link: this.$route.name === 'Home' ? {name: "About"} : {name: "Home"},
         };
     },
 }

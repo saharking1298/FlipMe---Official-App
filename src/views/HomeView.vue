@@ -5,7 +5,7 @@
     <div class="section" v-if="currentVote !== null">
         <h2> Ongoing Votes </h2>
         <div class="section">
-            <router-link to="/vote" class="vote-link"> {{ currentVote.question }} </router-link>
+            <router-link :to="{name: 'Vote'}" class="vote-link"> {{ currentVote.question }} </router-link>
             <div class="vote-date">
                     <font-awesome-icon icon="calendar" />
                     {{ currentVote.date }}
@@ -16,7 +16,7 @@
         <h2> Vote History </h2>
         <div v-if="reversedVoteHistory.length > 0">
             <div class="section" v-for="(item, index) in reversedVoteHistory" :key="index">
-                <router-link :to="`/votes/${index}`" class="vote-link"> {{ item.question }} </router-link>
+                <router-link :to="{name: 'Results', params: {voteId: index}}" class="vote-link"> {{ item.question }} </router-link>
                 <div class="vote-date">
                     <font-awesome-icon icon="calendar" />
                     {{ item.date }}

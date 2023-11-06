@@ -24,7 +24,7 @@
         <section id="enter-app">
             <h3> So Let's Go For It! </h3>
             <p> Click on the button to open FlipMe now!</p>
-            <router-link to="/" alt="Open FlipMe">
+            <router-link :to="{name: 'Home'}" alt="Open FlipMe">
                 <button class="center"> Enter The World Of FlipMe! </button>
             </router-link>
             <a href="/" class="back-link"> Or go back to homepage instead </a>

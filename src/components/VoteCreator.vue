@@ -139,7 +139,7 @@ export default {
 
             // Start vote with voteSettings - TODO
             this.setVoteSettings(voteSettings);
-            this.$router.push("/vote");
+            this.$router.push({name: "Vote"});
         },
         showWarning (warning) {
             this.warning.text = warning;

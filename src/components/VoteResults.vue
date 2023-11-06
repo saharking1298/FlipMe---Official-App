@@ -1,6 +1,6 @@
 <template>
     <div class="results-view">
-        <router-link to="/">
+        <router-link :to="{name: 'Home'}">
             <font-awesome-icon icon="arrow-left" class="back-btn"/>
         </router-link>
         <h1> Vote Results </h1>
@@ -67,7 +67,7 @@ export default {
         deleteVote () {
             if (confirm("Delete this vote?")) {
                 this.deletePastVote(this.voteIndex);
-                this.$router.push("/");
+                this.$router.push({name: "Home"});
             }
         }  
     },

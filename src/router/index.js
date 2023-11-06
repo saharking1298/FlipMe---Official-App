@@ -1,3 +1,4 @@
+const { baseURL } = require("../config.js");
 import { createWebHistory, createRouter } from "vue-router";
 import { loadCurrentVote } from "@/scripts/utils.js";
 import HomeView from "@/views/HomeView.vue";
@@ -7,35 +8,36 @@ import VoteResults from "@/views/ResultsView.vue";
 
 const routes = [
   {
-    path: "/",
+    path: baseURL + "/",
     name: "Home",
     component: HomeView,
   },
   {
-    path: "/about",
+    path: baseURL + "/about",
     name: "About",
     component: AboutView,
   },
   {
-    path: "/vote",
+    path: baseURL + "/vote",
     name: "Vote",
     component: VoteView
   },
   {
-    path: "/votes/:voteId",
+    path: baseURL + "/votes/:voteId",
     name: "Results",
     component: VoteResults
   }
 ];
 
 const router = createRouter({
+  base: baseURL,
   history: createWebHistory(),
   routes,
 });
 
 router.beforeEach((to, from, next) => {
   if (to.name === "Vote" && !loadCurrentVote()) {
-    next('/');
+    next({name: "Home"});
   }
   else {
     next();
