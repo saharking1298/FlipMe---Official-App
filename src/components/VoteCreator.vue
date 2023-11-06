@@ -105,7 +105,7 @@ export default {
             this.setPreset(clonedVote.preset.id);
             if (clonedVote.preset.id === "presetCustomRange") {
                 this.inputs.rangeMinNumber = clonedVote.preset.min.toString();
-                this.inputs.rangeMinNumber = clonedVote.preset.max.toString();
+                this.inputs.rangeMaxNumber = clonedVote.preset.max.toString();
             }
             if (clonedVote.preset.id === "presetCustomChoice") {
                 this.customChoices = clonedVote.preset.choices;
